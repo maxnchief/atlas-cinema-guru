@@ -1,7 +1,9 @@
-export default async function Page() {
-  return (
-    <div className="flex items-center justify-center h-screen">
-      Hello Cinema Guru
-    </div>
-  );
+// app/page.tsx
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+
+export default async function Home() {
+  const session = await auth();
+  if (!session) redirect("/api/auth/signin");
+  redirect("/dashboard");
 }
