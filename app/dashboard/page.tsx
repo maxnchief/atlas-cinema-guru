@@ -44,8 +44,8 @@ export default function DashboardPage() {
         data?.title.map((m: any) => ({
           id: m.id,
           title: m.title,
-          description: m.synopsis, // map from API
-          year: m.released,        // map from API
+          description: m.synopsis,
+          year: m.released,
           genre: m.genre,
           favorited: m.favorited,
           watchLater: m.watchLater,
@@ -70,7 +70,6 @@ export default function DashboardPage() {
     );
   };
 
-  // Toggle favorite
   const toggleFavorite = async (movieId: string, favorited: boolean) => {
     try {
       await fetch(`/api/favorites/${movieId}`, {
@@ -82,7 +81,6 @@ export default function DashboardPage() {
     }
   };
 
-  // Toggle watch later
   const toggleWatchLater = async (movieId: string, watchLater: boolean) => {
     try {
       await fetch(`/api/watch-later/${movieId}`, {
@@ -95,8 +93,8 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">🎬 Movie Explorer</h1>
+    <div className="p-6 text-white">
+      <h1 className="text-2xl font-bold mb-6 text-[#1ED5AF]">🎬 Movie Explorer</h1>
 
       {/* Filters */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -105,21 +103,21 @@ export default function DashboardPage() {
           placeholder="Search by title..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="p-2 rounded-md text-black w-full"
+          className="p-3 rounded-xl w-full bg-transparent border-2 border-[#1ED5AF] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1ED5AF]"
         />
         <input
           type="number"
           placeholder="Min Year"
           value={minYear}
           onChange={(e) => setMinYear(e.target.value)}
-          className="p-2 rounded-md text-black w-full"
+          className="p-3 rounded-xl w-full bg-transparent border-2 border-[#1ED5AF] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1ED5AF]"
         />
         <input
           type="number"
           placeholder="Max Year"
           value={maxYear}
           onChange={(e) => setMaxYear(e.target.value)}
-          className="p-2 rounded-md text-black w-full"
+          className="p-3 rounded-xl w-full bg-transparent border-2 border-[#1ED5AF] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1ED5AF]"
         />
       </div>
 
@@ -129,10 +127,10 @@ export default function DashboardPage() {
           <button
             key={g}
             onClick={() => toggleGenre(g)}
-            className={`px-3 py-1 rounded-full text-sm border ${
+            className={`px-4 py-2 rounded-full text-sm border transition-all ${
               genres.includes(g)
-                ? "bg-[#1ED2AF] text-black border-[#1ED2AF]"
-                : "border-gray-400 text-gray-300 hover:bg-gray-700"
+                ? "bg-[#1ED5AF] text-black border-[#1ED5AF]"
+                : "border-[#1ED5AF] text-[#1ED5AF] hover:bg-[#1ED5AF]/10"
             }`}
           >
             {g}
@@ -148,7 +146,7 @@ export default function DashboardPage() {
           {movies.map((movie) => (
             <div
               key={movie.id}
-              className="relative group bg-[#0b0b4a] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition"
+              className="relative group bg-[#0b0b4a] rounded-xl overflow-hidden shadow-md hover:shadow-xl transition"
             >
               <img
                 src={movie.image}
@@ -156,9 +154,9 @@ export default function DashboardPage() {
                 className="w-full h-64 object-cover"
               />
               <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-3">
-                <h2 className="text-lg font-bold">{movie.title}</h2>
-                <p className="text-xs text-gray-300 line-clamp-2">{movie.description}</p>
-                <p className="text-sm mt-2 text-[#1ED2AF]">
+                <h2 className="text-lg font-bold text-[#1ED5AF]">{movie.title}</h2>
+                <p className="text-xs text-gray-200 line-clamp-2">{movie.description}</p>
+                <p className="text-sm mt-2 text-[#1ED5AF]">
                   {movie.year} • {movie.genre}
                 </p>
 
@@ -179,7 +177,9 @@ export default function DashboardPage() {
                     className="hover:scale-110 transition"
                   >
                     <Clock
-                      className={`${movie.watchLater ? "text-blue-400" : "text-gray-300"}`}
+                      className={`${
+                        movie.watchLater ? "text-[#1ED5AF]" : "text-gray-300"
+                      }`}
                     />
                   </button>
                 </div>
@@ -196,14 +196,14 @@ export default function DashboardPage() {
         <button
           disabled={page <= 1}
           onClick={() => setPage((p) => Math.max(p - 1, 1))}
-          className="px-4 py-2 bg-[#0b0b4a] rounded-md hover:bg-[#1ED2AF]/20 disabled:opacity-50"
+          className="px-4 py-2 bg-[#0b0b4a] rounded-md hover:bg-[#1ED5AF]/20 disabled:opacity-50 transition"
         >
           ◀ Prev
         </button>
-        <span className="text-sm">Page {page}</span>
+        <span className="text-sm text-[#1ED5AF]">Page {page}</span>
         <button
           onClick={() => setPage((p) => p + 1)}
-          className="px-4 py-2 bg-[#0b0b4a] rounded-md hover:bg-[#1ED2AF]/20"
+          className="px-4 py-2 bg-[#0b0b4a] rounded-md hover:bg-[#1ED5AF]/20 transition"
         >
           Next ▶
         </button>

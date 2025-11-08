@@ -35,7 +35,7 @@ export default function ActivityFeed() {
   if (activities.length === 0)
     return <p className="text-gray-400 text-sm">No recent activity yet.</p>;
 
-  // Helper function to safely convert UTC → Local Time
+  // Convert UTC → Local Time
   const formatToLocalTime = (utcString: string) => {
     const date = new Date(utcString);
     const localTime = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
@@ -49,18 +49,20 @@ export default function ActivityFeed() {
   };
 
   return (
-    <div className="space-y-3">
-      <h2 className="text-lg font-semibold mb-2">Recent Activity</h2>
+    <div className="space-y-3 border-t border-black/30 pt-3">
+      <h2 className="text-lg font-semibold mb-2 text-[#1ED5AF]">
+        Recent Activity
+      </h2>
       {activities.map((act) => (
         <div
           key={act.id}
-          className="bg-[#1a1a1a] p-3 rounded-xl text-sm border border-[#2a2a2a]"
+          className="bg-[#0b0b4a] p-3 rounded-xl text-sm border border-[#1ED5AF]/40"
         >
-          <p className="font-medium">
-            {act.activity === "FAVORITED" ? "❤️ Favorited" : "⏱️ Watch Later"}{" "}
-            <span className="text-[#1ED2AF]">{act.title}</span>
+          <p className="font-medium text-[#1ED5AF]">
+            {act.activity === "FAVORITED" ? "❤️ Favorited" : "⏱️ Watch Later"}
           </p>
-          <p className="text-gray-500 text-xs">
+          <p className="text-white">{act.title}</p>
+          <p className="text-gray-400 text-xs mt-1">
             {formatToLocalTime(act.timestamp)}
           </p>
         </div>
