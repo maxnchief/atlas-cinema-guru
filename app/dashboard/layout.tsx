@@ -2,7 +2,7 @@
 import { auth, signOut } from "@/auth";
 import Link from "next/link";
 import Image from "next/image";
-import ActivityFeed from "./ActivityFeed";
+import ActivityFeed from "../../components/ActivityFeed";
 import { redirect } from "next/navigation";
 
 // Lucide Icons
@@ -43,11 +43,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <Link href="/dashboard/watch-later" className="px-4 py-2 hover:bg-[#1ED2AF]/20 transition rounded-md text-sm flex items-center gap-2">
             <Clock size={16} />
             <span className="hidden group-hover:inline ml-2">Watch Later</span>
-          </Link>
-
-          <Link href="/dashboard/activities" className="px-4 py-2 hover:bg-[#1ED2AF]/20 transition rounded-md text-sm flex items-center gap-2">
-            <Activity size={16} />
-            <span className="hidden group-hover:inline ml-2">Activity</span>
           </Link>
         </nav>
 
