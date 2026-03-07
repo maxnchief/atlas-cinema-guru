@@ -11,7 +11,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="antialiased bg-[#00003c] text-white">
         {children}
-        {/* comment out */}
       </body>
     </html>
   );
