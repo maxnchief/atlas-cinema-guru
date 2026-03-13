@@ -1,0 +1,24 @@
+name: Deploy to Vercel and Seed Database
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-and-seed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Trigger Vercel Deployment Hook
+        run: |
+          curl -X POST "https://api.vercel.com/v1/integrations/deploy/prj_nfPClAzNdob8OWBP4P6qxXl3hbB1/LmhCnIz7BB"
+
+      - name: Wait for deployment
+        run: sleep 60
+
+      - name: Seed Database
+        run: |
+          curl -X GET "https://atlas-cinema-guru-dun.vercel.app/api/seed"
