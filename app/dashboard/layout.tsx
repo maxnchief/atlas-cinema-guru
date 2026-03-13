@@ -12,7 +12,7 @@ export default async function DashboardLayout({
 }) {
   const session = await auth();
 
-  if (!session) redirect("/api/auth/signin");
+  if (!session) redirect("/login");
   const user = session.user;
 
   return (
@@ -64,22 +64,26 @@ export default async function DashboardLayout({
       <div className="flex-1 flex flex-col bg-[#00003c]">
         {/* Header */}
         <header className="flex justify-between items-center p-4 bg-[#0b0b4a] shadow-md">
-          <h1 className="text-lg font-semibold text-white">
-            Welcome, {user?.email}
-          </h1>
-          <form
-            action={async () => {
-              "use server";
-              await signOut();
-            }}
-          >
-            <button
-              type="submit"
-              className="bg-[#1ED5AF] text-black px-4 py-2 rounded-md hover:opacity-90 transition"
+          <div className="flex items-center gap-4">
+            <Image src="/logo.png" alt="Atlas School Logo" width={48} height={48} className="bg-transparent" />
+            <span className="text-xl font-bold text-white tracking-tight">Cinema Guru</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <span className="text-base text-white">Welcome, {user?.email}</span>
+            <form
+              action={async () => {
+                "use server";
+                await signOut({ callbackUrl: "/login" });
+              }}
             >
-              Sign Out
-            </button>
-          </form>
+              <button
+                type="submit"
+                className="bg-[#1ED5AF] text-black px-4 py-2 rounded-md hover:opacity-90 transition font-semibold"
+              >
+                Logout
+              </button>
+            </form>
+          </div>
         </header>
 
         {/* Page Content */}
