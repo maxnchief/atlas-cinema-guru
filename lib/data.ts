@@ -97,9 +97,14 @@ export async function fetchFavorites(page: number, userEmail: string) {
  */
 export async function insertFavorite(title_id: string, userEmail: string) {
   try {
-    const data =
-      await sql<Question>`INSERT INTO favorites (title_id, user_id) VALUES (${title_id}, ${userEmail})`;
-    insertActivity(title_id, userEmail, "FAVORITED");
+    // Fetch user ID by email
+    const userResult = await sql<User>`SELECT id FROM users WHERE email = ${userEmail}`;
+    if (!userResult.rows.length) {
+      throw new Error("User not found.");
+    }
+    const userId = userResult.rows[0].id;
+    const data = await sql<Question>`INSERT INTO favorites (title_id, user_id) VALUES (${title_id}, ${userId})`;
+    insertActivity(title_id, userId, "FAVORITED");
     return data.rows;
   } catch (error) {
     console.error("Database Error:", error);
