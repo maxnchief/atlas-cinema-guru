@@ -64,7 +64,7 @@ export default function FavoritesPage() {
         <p className="text-gray-400">Loading favorites...</p>
       ) : movies.length ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {movies.map((movie) => (
+          {Array.from(new Map(movies.map(m => [m.id, m])).values()).map((movie) => (
             <div
               key={movie.id}
               className="relative group bg-[#0b0b4a] rounded-xl overflow-hidden shadow-md hover:shadow-xl transition"

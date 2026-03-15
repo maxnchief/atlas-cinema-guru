@@ -62,11 +62,18 @@ export async function fetchTitles(
  */
 export async function fetchFavorites(page: number, userEmail: string) {
   try {
+    // Fetch user ID by email
+    const userResult = await sql<User>`SELECT id FROM users WHERE email = ${userEmail}`;
+    if (!userResult.rows.length) {
+      throw new Error("User not found.");
+    }
+    const userId = userResult.rows[0].id;
+
     const watchLater = (
       await db
         .selectFrom("watchlater")
         .select("title_id")
-        .where("user_id", "=", userEmail)
+        .where("user_id", "=", userId)
         .execute()
     ).map((row) => row.title_id);
 
@@ -74,7 +81,7 @@ export async function fetchFavorites(page: number, userEmail: string) {
       .selectFrom("titles")
       .selectAll("titles")
       .innerJoin("favorites", "titles.id", "favorites.title_id")
-      .where("favorites.user_id", "=", userEmail)
+      .where("favorites.user_id", "=", userId)
       .orderBy("titles.released", "asc")
       .limit(6)
       .offset((page - 1) * 6)
@@ -117,8 +124,14 @@ export async function insertFavorite(title_id: string, userEmail: string) {
  */
 export async function deleteFavorite(title_id: string, userEmail: string) {
   try {
+    // Fetch user ID by email
+    const userResult = await sql<User>`SELECT id FROM users WHERE email = ${userEmail}`;
+    if (!userResult.rows.length) {
+      throw new Error("User not found.");
+    }
+    const userId = userResult.rows[0].id;
     const data =
-      await sql<Question>`DELETE FROM favorites WHERE title_id = ${title_id} AND user_id = ${userEmail}`;
+      await sql<Question>`DELETE FROM favorites WHERE title_id = ${title_id} AND user_id = ${userId}`;
     return data.rows;
   } catch (error) {
     console.error("Database Error:", error);
@@ -131,8 +144,14 @@ export async function deleteFavorite(title_id: string, userEmail: string) {
  */
 export async function favoriteExists(title_id: string, userEmail: string) {
   try {
+    // Fetch user ID by email
+    const userResult = await sql<User>`SELECT id FROM users WHERE email = ${userEmail}`;
+    if (!userResult.rows.length) {
+      throw new Error("User not found.");
+    }
+    const userId = userResult.rows[0].id;
     const data =
-      await sql<Question>`SELECT * FROM favorites WHERE title_id = ${title_id} AND user_id = ${userEmail}`;
+      await sql<Question>`SELECT * FROM favorites WHERE title_id = ${title_id} AND user_id = ${userId}`;
     return data.rows.length > 0;
   } catch (error) {
     console.error("Database Error:", error);

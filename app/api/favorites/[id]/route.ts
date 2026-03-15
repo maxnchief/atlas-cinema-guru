@@ -42,8 +42,19 @@ export const DELETE = auth(
     const params = await context.params;
     const { id } = params;
 
-    // No authentication required
-    await deleteFavorite(id);
+    //@ts-ignore
+    if (!req.auth) {
+      return NextResponse.json(
+        { error: "Unauthorized - Not logged in" },
+        { status: 401 }
+      );
+    }
+
+    const {
+      user: { email }, //@ts-ignore
+    } = req.auth;
+
+    await deleteFavorite(id, email);
     return NextResponse.json({ message: "Favorite removed" });
   }
 );
