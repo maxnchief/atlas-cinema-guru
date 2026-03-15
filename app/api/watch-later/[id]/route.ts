@@ -36,11 +36,23 @@ export const POST = auth(
 
 export const DELETE = auth(
   //@ts-ignore
-  async (req: NextRequest, { params }: { params: { id: string } }) => {
+  async (req: NextRequest, context: { params: Promise<{ id: string }> }) => {
+    const params = await context.params;
     const { id } = params;
 
-    // No authentication required
-    await deleteWatchLater(id);
-    return NextResponse.json({ message: "Watch Later removed" });
+    //@ts-ignore
+    if (!req.auth) {
+      return NextResponse.json(
+        { error: "Unauthorized - Not logged in" },
+        { status: 401 }
+      );
+    }
+
+    const {
+      user: { email }, //@ts-ignore
+    } = req.auth;
+
+    await deleteWatchLater(id, email);
+    return NextResponse.json({ message: "Removed from Watch Later" });
   }
 );

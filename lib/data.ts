@@ -164,11 +164,18 @@ export async function favoriteExists(title_id: string, userEmail: string) {
  */
 export async function fetchWatchLaters(page: number, userEmail: string) {
   try {
+    // Fetch user ID by email
+    const userResult = await sql<User>`SELECT id FROM users WHERE email = ${userEmail}`;
+    if (!userResult.rows.length) {
+      throw new Error("User not found.");
+    }
+    const userId = userResult.rows[0].id;
+
     const favorites = (
       await db
         .selectFrom("favorites")
         .select("title_id")
-        .where("user_id", "=", userEmail)
+        .where("user_id", "=", userId)
         .execute()
     ).map((row) => row.title_id);
 
@@ -176,7 +183,7 @@ export async function fetchWatchLaters(page: number, userEmail: string) {
       .selectFrom("titles")
       .selectAll("titles")
       .innerJoin("watchlater", "titles.id", "watchlater.title_id")
-      .where("watchlater.user_id", "=", userEmail)
+      .where("watchlater.user_id", "=", userId)
       .orderBy("titles.released", "asc")
       .limit(6)
       .offset((page - 1) * 6)
@@ -221,8 +228,14 @@ export async function insertWatchLater(title_id: string, userEmail: string) {
  */
 export async function deleteWatchLater(title_id: string, userEmail: string) {
   try {
+    // Fetch user ID by email
+    const userResult = await sql<User>`SELECT id FROM users WHERE email = ${userEmail}`;
+    if (!userResult.rows.length) {
+      throw new Error("User not found.");
+    }
+    const userId = userResult.rows[0].id;
     const data =
-      await sql`DELETE FROM watchLater WHERE title_id = ${title_id} AND user_id = ${userEmail}`;
+      await sql`DELETE FROM watchLater WHERE title_id = ${title_id} AND user_id = ${userId}`;
     return data.rows;
   } catch (error) {
     console.error("Database Error:", error);
