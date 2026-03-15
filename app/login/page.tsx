@@ -1,4 +1,5 @@
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
 "use client";
 import { signIn } from "@/auth";
 import Image from "next/image";
