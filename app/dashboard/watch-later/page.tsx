@@ -19,24 +19,13 @@ export default function WatchLaterPage() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
 
-  const fetchWatchLater = async () => {
+  // Use sessionStorage for watch-later
+  const fetchWatchLater = () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/watch-later?page=${page}`);
-      const data = await res.json();
-
-      const mappedMovies = (data.watchLater || []).map((m: any) => ({
-        id: m.id,
-        title: m.title,
-        synopsis: m.synopsis,
-        releaseYear: m.released,
-        genres: m.genre ? [m.genre] : [],
-        favorited: m.favorited || false,
-        watchLater: true, // all on this page are watch-later
-        image: m.image || "/placeholder.jpg",
-      }));
-
-      setMovies(mappedMovies);
+      const stored = sessionStorage.getItem("watchLater");
+      const watchLater = stored ? JSON.parse(stored) : [];
+      setMovies(watchLater);
     } catch (err) {
       console.error("Failed to fetch watch-later:", err);
       setMovies([]);
@@ -49,19 +38,26 @@ export default function WatchLaterPage() {
     fetchWatchLater();
   }, [page]);
 
-  const toggleFavorite = async (id: string, favorited: boolean) => {
+  const toggleFavorite = (id: string, favorited: boolean) => {
     try {
-      const method = favorited ? "DELETE" : "POST";
-      await fetch(`/api/favorites/${id}`, { method });
+      let watchLater = sessionStorage.getItem("watchLater");
+      let wlArr = watchLater ? JSON.parse(watchLater) : [];
+      wlArr = wlArr.map((m: any) =>
+        m.id === id ? { ...m, favorited: !favorited } : m
+      );
+      sessionStorage.setItem("watchLater", JSON.stringify(wlArr));
       fetchWatchLater();
     } catch (err) {
       console.error("Failed to toggle favorite:", err);
     }
   };
 
-  const toggleWatchLater = async (id: string) => {
+  const toggleWatchLater = (id: string) => {
     try {
-      await fetch(`/api/watch-later/${id}`, { method: "DELETE" });
+      let watchLater = sessionStorage.getItem("watchLater");
+      let wlArr = watchLater ? JSON.parse(watchLater) : [];
+      wlArr = wlArr.filter((m: any) => m.id !== id);
+      sessionStorage.setItem("watchLater", JSON.stringify(wlArr));
       fetchWatchLater();
     } catch (err) {
       console.error("Failed to remove from watch-later:", err);

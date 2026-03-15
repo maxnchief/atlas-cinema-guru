@@ -38,11 +38,8 @@ export const DELETE = auth(
   async (req: NextRequest, { params }: { params: { id: string } }) => {
     const { id } = params;
 
-    const {
-      user: { email }, //@ts-ignore
-    } = req.auth;
-
-    await deleteWatchLater(id, email);
+    // No authentication required
+    await deleteWatchLater(id);
     return NextResponse.json({ message: "Watch Later removed" });
   }
 );

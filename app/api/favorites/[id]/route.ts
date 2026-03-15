@@ -42,11 +42,8 @@ export const DELETE = auth(
     const params = await context.params;
     const { id } = params;
 
-    const {
-      user: { email }, //@ts-ignore
-    } = req.auth;
-
-    await deleteFavorite(id, email);
+    // No authentication required
+    await deleteFavorite(id);
     return NextResponse.json({ message: "Favorite removed" });
   }
 );
