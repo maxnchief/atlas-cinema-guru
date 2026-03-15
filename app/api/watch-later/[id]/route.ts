@@ -8,7 +8,8 @@ import { auth } from "@/auth";
 
 export const POST = auth(
   //@ts-ignore
-  async (req: NextRequest, { params }: { params: { id: string } }) => {
+  async (req: NextRequest, context: { params: Promise<{ id: string }> }) => {
+    const params = await context.params;
     const { id } = params;
 
     //@ts-ignore

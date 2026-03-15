@@ -199,10 +199,16 @@ export async function fetchWatchLaters(page: number, userEmail: string) {
  */
 export async function insertWatchLater(title_id: string, userEmail: string) {
   try {
+    // Fetch user ID by email
+    const userResult = await sql<User>`SELECT id FROM users WHERE email = ${userEmail}`;
+    if (!userResult.rows.length) {
+      throw new Error("User not found.");
+    }
+    const userId = userResult.rows[0].id;
     const data =
-      await sql<Question>`INSERT INTO watchLater (title_id, user_id) VALUES (${title_id}, ${userEmail})`;
+      await sql<Question>`INSERT INTO watchLater (title_id, user_id) VALUES (${title_id}, ${userId})`;
 
-    insertActivity(title_id, userEmail, "WATCH_LATER");
+    insertActivity(title_id, userId, "WATCH_LATER");
     return data.rows;
   } catch (error) {
     console.error("Database Error:", error);
