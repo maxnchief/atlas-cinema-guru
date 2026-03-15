@@ -3,8 +3,9 @@ export const runtime = "nodejs";
 "use client";
 import { signIn } from "@/auth";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 
-export default function LoginPage() {
+function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md flex flex-col items-center">
@@ -21,3 +22,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(LoginPage), { ssr: false });
