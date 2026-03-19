@@ -1,10 +1,8 @@
+export const runtime = "nodejs";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
-"use client";
 import { signIn } from "@/auth";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 
 function LoginPage() {
   return (
